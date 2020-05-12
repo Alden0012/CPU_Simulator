@@ -6,5 +6,7 @@ int main(){
 	test1.loadInst();
 	test1.CleanupInstMem();
 	test1.PerformDataSetup();
+	while(test1.ExecuteCurrentIR()){
+	}
 	test1.TesterPrintData();
 }

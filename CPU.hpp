@@ -8,14 +8,14 @@ struct Instruction{
 	string opcode;
 	short operand;
 };
-class CPU{
-	short Acc;
-	short PC;
-	Instruction IR;
+class CPU{ 
+	short Acc; //Accumulator
+	short PC; //Program Counter
+	Instruction IR;// Instruction register
 	short DataMem[4096];
 	Instruction InstMem[4096];
 	Instruction DataSetup[4096];
-	short DSPC;
+	short DSPC; // Data Setup Program Counter
 	public:
 	void initializeCPU();
 	void loadInst();
@@ -25,6 +25,7 @@ class CPU{
 	void UpdateIR();
 	void CleanupInstMem();
 	void PerformDataSetup();
+	bool ExecuteCurrentIR();
 };
 
 ostream& operator<<(ostream& out, Instruction Inst);

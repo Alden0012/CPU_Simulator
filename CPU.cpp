@@ -38,8 +38,12 @@ ostream& operator<<(ostream& out, Instruction Inst){
 	return out;
 }
 istream& operator>>(istream& in,Instruction& Inst){
+	
 	in >> Inst.opcode;
-	in >> Inst.operand;
+	if (Inst.opcode == "STP")
+		{	Inst.operand = 0; }
+	else{
+	in >> Inst.operand;}
 	//cout << Inst.opcode << " " << Inst.operand;
 	return in;
 }
@@ -85,6 +89,57 @@ void CPU::PerformDataSetup(){
 				else{
 					DSPC++;
 				}
-			}
 		}
 	}
+}
+bool CPU::ExecuteCurrentIR(){
+	UpdateIR();
+	bool LockPC = false;
+	string opc = IR.opcode;
+	short opr = IR.operand;
+	if(opc == "LDA"){
+		Acc = DataMem[opr];
+	}
+	else if(opc == "ADD"){
+		Acc += DataMem[opr];
+	}
+	else if(opc == "SUB"){
+		Acc -= DataMem[opr];
+	}
+	else if(opc == "LDI"){
+		Acc = opr;
+	}
+	else if(opc == "JMP"){
+		PC = opr;
+		LockPC = true;
+	}
+	else if(opc == "JMI"){
+		if(Acc < 0){
+			PC = opr;
+			LockPC = true;
+		}
+	}
+	else if(opc == "JEQ"){
+		if(Acc == 0){
+			PC = opr;
+			LockPC = true;
+		}
+	}
+	else if(opc == "STA"){
+		DataMem[opr] = Acc;
+	}
+	else if(opc == "LSR"){
+		Acc = Acc / 2;
+	}
+	else if(opc == "STP"){
+		return false;
+	}
+	if (!LockPC){
+		UpdatePC();
+	}
+	//if(PC == 10){
+	//	return false;
+	//}
+	return true;
+
+}
